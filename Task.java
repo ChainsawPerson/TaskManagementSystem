@@ -5,7 +5,7 @@ public class Task {
     protected String name;
     protected String description;
     protected String category;
-    protected String priority;
+    protected Priority priority;
     protected LocalDate deadline;
     protected String status;
 
@@ -13,21 +13,11 @@ public class Task {
 
     // Constructors
 
-    public Task(String name, String dscr, String ctgr, String pri, LocalDate dl) { // With all parameters
+    public Task(String name, String dscr, String ctgr, Priority pri, LocalDate dl) { // With all parameters
         this.name = name;
         this.description = dscr;
         this.category = ctgr;
         this.priority = pri;
-        this.deadline = dl;
-        this.status = "Open";
-        this.reminders = new ArrayList<Reminder>();
-    }
-
-    public Task(String name, String dscr, String ctgr, LocalDate dl) { // For default category
-        this.name = name;
-        this.description = dscr;
-        this.category = ctgr;
-        this.priority = "Default";
         this.deadline = dl;
         this.status = "Open";
         this.reminders = new ArrayList<Reminder>();
@@ -47,7 +37,11 @@ public class Task {
         return category;
     }
 
-    public String getPriority() {
+    public String getPriorityName() {
+        return priority.getName();
+    }
+
+    public Priority gePriority() {
         return priority;
     }
 
@@ -73,7 +67,7 @@ public class Task {
         category = c;
     }
 
-    public void changePriority(String p) {
+    public void changePriority(Priority p) {
         priority = p;
     }
 
@@ -94,7 +88,7 @@ public class Task {
                 break;
             case "Completed":
                 this.status = s;
-                reminders = null;
+                reminders.clear();
                 break;
             case "Delayed":
                 this.status = s;
@@ -121,7 +115,7 @@ public class Task {
         String ret = "Name: " + name + "\n";
         ret += "Description: " + description + "\n";
         ret += "Category: " + category + "\n";
-        ret += "Priority: " + priority + "\n";
+        ret += "Priority: " + priority.getName() + "\n";
         ret += "Deadline: " + deadline.toString() + "\n";
         ret += "Status: " + status + "\n";
         ret += "Reminders: \n";

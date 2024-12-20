@@ -32,13 +32,14 @@ public class Priority {
     public void changeName(String n) {
         if (name == "Default" || n == "Default") return;
         name = n;
-        for (int i = 0; i < tasks.size(); i++) {
-            tasks.get(i).changePriority(n);
-        }
     }
 
     public void deletePriority() {
         if(name == "Default") return;
+        for (Task task : tasks) {
+            task.deleteTask();
+        }
+        tasks.clear();
         tasks = null;
     } 
 
