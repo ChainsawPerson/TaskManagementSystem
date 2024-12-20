@@ -21,6 +21,8 @@ public class Task {
         this.deadline = dl;
         this.status = "Open";
         this.reminders = new ArrayList<Reminder>();
+
+        priority.addTask(this);
     }
 
     // Getters
@@ -127,15 +129,12 @@ public class Task {
 
     public void deleteReminder(Reminder r) {
         reminders.remove(r);
-        r = null;
     }
 
     public void deleteTask() {
-        for (Reminder i : reminders) {
-            i = null;
-        }
         reminders.clear();
         reminders = null;
+        priority.deleteTask(this);
     }
 
 }

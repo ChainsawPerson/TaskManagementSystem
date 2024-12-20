@@ -43,6 +43,10 @@ public class Priority {
         tasks = null;
     } 
 
+    public void deleteTask(Task t) {
+        tasks.remove(t);
+    }
+
     public void addTask(Task t) {
         tasks.add(t);
     }
