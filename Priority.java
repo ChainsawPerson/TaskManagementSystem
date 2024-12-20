@@ -1,53 +1,69 @@
 import java.util.ArrayList;
 
-public class Priority {
-    private String name;
+public class Priority extends DefaultPriority{
     private ArrayList<Task> tasks;
 
-    // Constructors
-
-    public Priority() {
-        name = "Default";
-        tasks = new ArrayList<Task>();
+    // Constructor
+    public Priority() { // Default
+        super.name = "Default";
     }
 
     public Priority(String n) {
-        if (n == "default") return;
-        name = n;
-        tasks = new ArrayList<Task>();
+        if (n != "Default") {
+            super.name = n;
+            tasks = new ArrayList<Task>();
+        }
     }
 
     // Getters
-
-    public String getName() {
-        return name;
-    }
-
     public ArrayList<Task> getTasks() {
-        return tasks;
+        if (name == "Default") return DefaultPriority.tasks;
+        else return tasks;
     }
 
     // Setters
-
     public void changeName(String n) {
-        if (name == "Default" || n == "Default") return;
-        name = n;
-    }
-
-    public void deletePriority() {
-        if(name == "Default") return;
-        for (Task task : tasks) {
-            task.deleteTask();
-        }
-        tasks.clear();
-        tasks = null;
-    } 
-
-    public void deleteTask(Task t) {
-        tasks.remove(t);
+        if (n != "Default") super.name = n;
     }
 
     public void addTask(Task t) {
-        tasks.add(t);
+        if (t.getPriorityName() != "Default") tasks.add(t);
+        else {DefaultPriority.tasks.add(t); System.out.println("I am executed");}
+    }
+
+    public void moveTask(Task t) { // Method to move between Custom and Default
+
+        if (t.gePriority() == this) { // Custom to Default
+            tasks.remove(t);
+            DefaultPriority.tasks.add(t);
+            t.changePriority(new Priority());
+        } 
+
+        else if (t.getPriorityName() == "Default") { // Default to Custom
+            DefaultPriority.tasks.remove(t);
+            tasks.add(t);
+            t.changePriority(this);
+        } 
+
+        else { // Another Custom to this Custom
+            t.gePriority().getTasks().remove(t);
+            tasks.add(t);
+            t.changePriority(this);
+        }
+
+    }
+
+    public void deleteTask(Task t) {
+        if (name == "Default") DefaultPriority.tasks.remove(t);
+        else tasks.remove(t);
+    }
+
+    public void deletePriority() {
+        for (Task task : tasks) {
+            DefaultPriority.tasks.add(task);
+            task.changePriority(new Priority());
+        }
+        tasks.clear();
+        super.name = null;
     }
 }

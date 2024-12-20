@@ -4,7 +4,7 @@ import java.time.LocalDate;
 public class Task {
     protected String name;
     protected String description;
-    protected String category;
+    protected Category category;
     protected Priority priority;
     protected LocalDate deadline;
     protected String status;
@@ -13,7 +13,7 @@ public class Task {
 
     // Constructors
 
-    public Task(String name, String dscr, String ctgr, Priority pri, LocalDate dl) { // With all parameters
+    public Task(String name, String dscr, Category ctgr, Priority pri, LocalDate dl) { // With all parameters
         this.name = name;
         this.description = dscr;
         this.category = ctgr;
@@ -21,7 +21,7 @@ public class Task {
         this.deadline = dl;
         this.status = "Open";
         this.reminders = new ArrayList<Reminder>();
-
+        category.addTask(this);
         priority.addTask(this);
     }
 
@@ -36,7 +36,7 @@ public class Task {
     }
 
     public String getCategory() {
-        return category;
+        return category.getName();
     }
 
     public String getPriorityName() {
@@ -65,7 +65,7 @@ public class Task {
         description = d;
     }
 
-    public void changeCategory(String c) {
+    public void changeCategory(Category c) {
         category = c;
     }
 
@@ -116,7 +116,7 @@ public class Task {
     public String getTaskInfo() {
         String ret = "Name: " + name + "\n";
         ret += "Description: " + description + "\n";
-        ret += "Category: " + category + "\n";
+        ret += "Category: " + category.getName() + "\n";
         ret += "Priority: " + priority.getName() + "\n";
         ret += "Deadline: " + deadline.toString() + "\n";
         ret += "Status: " + status + "\n";
@@ -135,6 +135,7 @@ public class Task {
         reminders.clear();
         reminders = null;
         priority.deleteTask(this);
+        category.deleteTask(this);
     }
 
 }
