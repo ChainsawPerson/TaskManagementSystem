@@ -8,11 +8,13 @@ public class Priority {
 
     public Priority() {
         name = "Default";
+        tasks = new ArrayList<Task>();
     }
 
     public Priority(String n) {
         if (n == "default") return;
         name = n;
+        tasks = new ArrayList<Task>();
     }
 
     // Getters

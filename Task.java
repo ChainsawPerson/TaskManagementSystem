@@ -20,6 +20,7 @@ public class Task {
         this.priority = pri;
         this.deadline = dl;
         this.status = "Open";
+        this.reminders = new ArrayList<Reminder>();
     }
 
     public Task(String name, String dscr, String ctgr, LocalDate dl) { // For default category
@@ -29,6 +30,7 @@ public class Task {
         this.priority = "Default";
         this.deadline = dl;
         this.status = "Open";
+        this.reminders = new ArrayList<Reminder>();
     }
 
     // Getters
@@ -108,6 +110,16 @@ public class Task {
     public void addReminder(LocalDate rd) {
         if (this.status != "Completed" && deadline.isAfter(rd))
             reminders.add(new Reminder(rd));
+    }
+
+    public String printTask() {
+        String ret = "Name: " + name + "\n";
+        ret += "Description: " + description + "\n";
+        ret += "Category: " + category + "\n";
+        ret += "Priority: " + priority + "\n";
+        ret += "Deadline: " + deadline.toString() + "\n";
+        ret += "Status: " + status + "\n";
+        return ret;
     }
 
 }
