@@ -109,17 +109,39 @@ public class Task {
 
     public void addReminder(LocalDate rd) {
         if (this.status != "Completed" && deadline.isAfter(rd))
-            reminders.add(new Reminder(rd));
+            reminders.add(new Reminder(this, rd));
     }
 
-    public String printTask() {
+    public void addReminder(Reminder r) {
+        if (this.status != "Completed" && deadline.isAfter(r.getReminderDate()))
+            reminders.add(r);
+    }
+
+    public String getTaskInfo() {
         String ret = "Name: " + name + "\n";
         ret += "Description: " + description + "\n";
         ret += "Category: " + category + "\n";
         ret += "Priority: " + priority + "\n";
         ret += "Deadline: " + deadline.toString() + "\n";
         ret += "Status: " + status + "\n";
+        ret += "Reminders: \n";
+        for (Reminder reminder : reminders) {
+            ret += reminder.getReminderDate().toString() + "\n";
+        }
         return ret;
+    }
+
+    public void deleteReminder(Reminder r) {
+        reminders.remove(r);
+        r = null;
+    }
+
+    public void deleteTask() {
+        for (Reminder i : reminders) {
+            i = null;
+        }
+        reminders.clear();
+        reminders = null;
     }
 
 }

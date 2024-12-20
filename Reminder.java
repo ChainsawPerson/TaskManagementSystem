@@ -2,16 +2,18 @@ import java.time.LocalDate;
 
 public class Reminder {
     private LocalDate date;
+    private Task task;
 
     // Constructors
 
-    public Reminder(LocalDate d) {
+    public Reminder(Task t, LocalDate d) {
         date = d;
+        task = t;
     }
 
     // Getters
 
-    public LocalDate getReminder() {
+    public LocalDate getReminderDate() {
         return date;
     }
 
@@ -21,4 +23,9 @@ public class Reminder {
         date = d;
     }
 
+    // Methods 
+
+    public void deleteReminder() {
+        task.deleteReminder(this);
+    }
 }
