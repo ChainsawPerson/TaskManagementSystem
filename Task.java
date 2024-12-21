@@ -21,8 +21,8 @@ public class Task {
         this.deadline = dl;
         this.status = "Open";
         this.reminders = new ArrayList<Reminder>();
-        category.addTask(this);
-        priority.addTask(this);
+        category.addTask(this); // Update category list
+        priority.addTask(this); // Update priority list
     }
 
     // Getters
@@ -103,6 +103,25 @@ public class Task {
 
     // Methods
 
+    // Reminders
+    public void addReminder(String d) {
+        if (this.status == "Completed") return;
+        switch (d) {
+            case "Day":
+                reminders.add(new Reminder(this, deadline.minusDays(1)));
+                break;
+            case "Week":
+                reminders.add(new Reminder(this, deadline.minusWeeks(1)));
+                break;
+            case "Month":
+                reminders.add(new Reminder(this, deadline.minusMonths(1)));
+                break;
+            default:
+                System.err.println("Invalid default date. Try for custom date?");
+                break;
+        }
+    }
+
     public void addReminder(LocalDate rd) {
         if (this.status != "Completed" && deadline.isAfter(rd))
             reminders.add(new Reminder(this, rd));
@@ -113,6 +132,22 @@ public class Task {
             reminders.add(r);
     }
 
+    public void editReminder(Reminder r, LocalDate rd) {
+        if (this.status != "Completed" && deadline.isAfter(rd))
+            r.setReminder(rd);
+    }
+
+    public void deleteReminder(Reminder r) {
+        reminders.remove(r);
+    }
+
+    public void checkReminders() {
+        for (Reminder reminder : reminders) {
+            reminder.checkDate();
+        }
+    }
+
+    // Task
     public String getTaskInfo() {
         String ret = "Name: " + name + "\n";
         ret += "Description: " + description + "\n";
@@ -125,10 +160,6 @@ public class Task {
             ret += reminder.getReminderDate().toString() + "\n";
         }
         return ret;
-    }
-
-    public void deleteReminder(Reminder r) {
-        reminders.remove(r);
     }
 
     public void deleteTask() {

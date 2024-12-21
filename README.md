@@ -27,15 +27,15 @@
 
 - [x] Create task reminders
 - [x] 1 task per reminder, multiple reminders per task
-- [ ] If task is completed, cannot create reminder
+- [x] If task is completed, cannot create reminder
 - [x] If task is changed to completed, automatically delete all affiliated reminders
-- [ ] Reminder types:
+- [x] Reminder types:
     * 1 day before deadline
     * 1 week -||-
     * 1 month -||-
     * Predetermined date
-- [ ] Notify user with message
-- [ ] Edit reminder
+- [x] Notify user with message
+- [x] Edit reminder
 - [x] Delete reminder
 
 ## Store and Load data
