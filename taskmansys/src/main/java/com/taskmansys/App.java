@@ -41,7 +41,8 @@ public class App extends Application {
         try {
             Storing.loadData(priorities, categories, tasks);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error loading data: " + e.getMessage());
+            System.err.println("Current working directory: " + System.getProperty("user.dir"));
         }
     }
 
@@ -60,6 +61,14 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public void stop() {
+        try {
+            Storing.storeData(tasks);
+        } catch (IOException e) {
+            System.err.println("Error storing data: " + e.getMessage());
+        }
     }
 
 }

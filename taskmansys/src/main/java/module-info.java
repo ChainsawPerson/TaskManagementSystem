@@ -1,7 +1,7 @@
 module com.taskmansys {
     requires javafx.controls;
     requires javafx.fxml;
-    requires json.simple;
+    requires org.json;
     
     opens com.taskmansys to javafx.fxml;
     exports com.taskmansys;
