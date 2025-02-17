@@ -13,7 +13,10 @@ public class Reminder {
     }
 
     // Getters
-
+    public Task getTask() {
+        return task;
+    }
+    
     public LocalDate getReminderDate() {
         return date;
     }

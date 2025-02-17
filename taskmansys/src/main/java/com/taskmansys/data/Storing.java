@@ -17,6 +17,7 @@ import com.taskmansys.model.Category;
 import com.taskmansys.model.Priority;
 import com.taskmansys.model.Reminder;
 import com.taskmansys.model.Task;
+import com.taskmansys.model.TaskList;
 
 public class Storing {
     private static final String TASKS_JSON = System.getProperty("user.dir") + File.separator + "medialab" + File.separator + "tasks.json";
@@ -63,7 +64,7 @@ public class Storing {
     }
 
     // Load Data
-    public static void loadData(ArrayList<Priority> prios, ArrayList<Category> categs, ArrayList<Task> tasks) throws Exception {
+    public static void loadData(ArrayList<Priority> prios, ArrayList<Category> categs) throws Exception {
          // If the file exists in the current working directory (outside JAR)
          if (!Files.exists(Paths.get(TASKS_JSON))) {
             System.out.println("File not found, starting with an empty task list.");
@@ -124,7 +125,7 @@ public class Storing {
             task.changeStatus(status); // Add this after reminders are added to make sure to clear them if status is "Completed"
 
             // Add task to list
-            tasks.add(task);
+            TaskList.tasks.add(task);
         }
         
     }

@@ -12,44 +12,76 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taskmansys.Controller">
    <children>
-      <BarChart prefHeight="172.0" prefWidth="1280.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
+      <BarChart fx:id="taskBarChart" prefHeight="201.0" prefWidth="1280.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" />
+         </yAxis>
       </BarChart>
       <Pane layoutX="13.0" layoutY="222.0">
          <children>
-            <Button layoutX="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Total Tasks" fx:id="totalTasksButton" />
-            <Button layoutX="108.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="124.0" text="Categories" />
-            <Button layoutX="245.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" text="Priorities" />
-            <Button layoutX="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" text="Reminders" />
-            <TextField layoutX="1104.0" promptText="Search" />
+            <Button fx:id="totalTasksButton" layoutX="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Total Tasks" />
+            <Button fx:id="totalCategoriesButton" layoutX="108.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="124.0" text="Categories" />
+            <Button fx:id="totalPrioritiesButton" layoutX="245.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" text="Priorities" />
+            <Button fx:id="totalRemindersButton" layoutX="371.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" text="Reminders" />
+            <TextField fx:id="searchTask" layoutX="1104.0" promptText="Search" />
             <MenuButton fx:id="createButton" layoutX="1184.0" layoutY="446.0" mnemonicParsing="false" text="Create:">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-              </items>
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Action 1" />
+                  <MenuItem mnemonicParsing="false" text="Action 2" />
+               </items>
             </MenuButton>
-            <Pane layoutY="25.0" fx:id="taskPane">
+            <Pane fx:id="taskPane" layoutY="25.0">
                <children>
                   <ScrollPane>
                      <content>
-                        <TableView prefHeight="419.0" prefWidth="1255.0" fx:id="taskTableView">
-                          <columns>
-                            <TableColumn prefWidth="182.0" text="Name" fx:id="nameColumn" />
-                            <TableColumn prefWidth="436.0" text="Description" fx:id="descriptionColumn" />
-                            <TableColumn minWidth="7.0" prefWidth="182.0" text="Category" fx:id="categoryColumn" />
-                            <TableColumn prefWidth="100.0" text="Status" fx:id="statusColumn" />
-                            <TableColumn prefWidth="170.0" text="Priority" fx:id="priorityColumn" />
-                            <TableColumn prefWidth="178.0" text="Deadline" fx:id="deadlineColumn" />
-                          </columns>
-                        </TableView>
+                        <StackPane prefHeight="418.0" prefWidth="1253.0">
+                           <children>
+                              <!-- Reminders Table View -->
+                              <TableView fx:id="reminderTableView" prefHeight="200.0" prefWidth="200.0">
+                                 <columns>
+                                    <TableColumn fx:id="reminderTaskNameCol" prefWidth="232.0" text="Task Name" />
+                                    <TableColumn fx:id="reminderTaskDescCol" minWidth="0.0" prefWidth="491.0" text="Task Description" />
+                                    <TableColumn fx:id="reminderTaskDeadlineCol" prefWidth="248.0" text="Deadline" />
+                                    <TableColumn fx:id="reminderDateCol" prefWidth="280.0" text="Reminder Date" />
+                                 </columns>
+                              </TableView>
+
+                              <!-- Priority Table View-->
+                              <TableView fx:id="priorityTableView" prefHeight="200.0" prefWidth="200.0">
+                                 <columns>
+                                    <TableColumn fx:id="priorityNameColumn" prefWidth="337.0" text="Name" />
+                                    <TableColumn fx:id="priorityNoTasksColumn" prefWidth="133.0" text="No. Tasks" />
+                                 </columns>
+                              </TableView>
+
+                              <!-- Category Table View -->
+                              <TableView fx:id="categoryTableView" prefHeight="200.0" prefWidth="200.0">
+                                 <columns>
+                                    <TableColumn fx:id="categoryNameColumn" prefWidth="341.0" text="Name" />
+                                    <TableColumn fx:id="categoryNoTasksColumn" prefWidth="110.0" text="No. Tasks" />
+                                 </columns>
+                              </TableView>
+
+                              <!-- Total Task Table View-->
+                              <TableView fx:id="taskTableView" prefHeight="419.0" prefWidth="1255.0">
+                                 <columns>
+                                    <TableColumn fx:id="taskNameColumn" prefWidth="182.0" text="Name" />
+                                    <TableColumn fx:id="taskDescriptionColumn" prefWidth="436.0" text="Description" />
+                                    <TableColumn fx:id="taskCategoryColumn" minWidth="7.0" prefWidth="182.0" text="Category" />
+                                    <TableColumn fx:id="taskStatusColumn" prefWidth="100.0" text="Status" />
+                                    <TableColumn fx:id="taskPriorityColumn" prefWidth="170.0" text="Priority" />
+                                    <TableColumn fx:id="taskDeadlineColumn" prefWidth="178.0" text="Deadline" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </StackPane>
                      </content>
                   </ScrollPane>
                </children>

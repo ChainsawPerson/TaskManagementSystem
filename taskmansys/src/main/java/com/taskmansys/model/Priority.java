@@ -74,9 +74,4 @@ public class Priority extends DefaultPriority{
         super.name = null;
     }
 
-    // Methods
-    @Override
-    public String toString() {
-        return name;
-    }
 }

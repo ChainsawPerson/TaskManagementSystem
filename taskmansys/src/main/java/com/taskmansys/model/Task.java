@@ -165,9 +165,9 @@ public class Task {
 
     public void deleteTask() {
         reminders.clear();
-        reminders = null;
         priority.deleteTask(this);
         category.deleteTask(this);
+        TaskList.tasks.remove(this);
     }
 
     public Iterable<Reminder> getReminders() {
