@@ -3,9 +3,6 @@ import java.util.ArrayList;
 
 public class Priority extends DefaultPriority{
 
-    public static Object getPriorityList() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
     private ArrayList<Task> tasks;
 
     // Constructor
@@ -71,7 +68,6 @@ public class Priority extends DefaultPriority{
             task.changePriority(new Priority());
         });
         tasks.clear();
-        super.name = null;
     }
 
 }

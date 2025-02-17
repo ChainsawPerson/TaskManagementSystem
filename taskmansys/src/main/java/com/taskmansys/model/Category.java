@@ -34,6 +34,7 @@ public class Category {
         }
         tasks.clear();
         tasks = null;
+        System.err.println(TaskList.tasks);
     } 
 
     public void deleteTask(Task t) {

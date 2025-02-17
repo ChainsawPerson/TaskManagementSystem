@@ -29,7 +29,7 @@ public class Controller {
     @FXML
     private BarChart<String, Number> taskBarChart;
 
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Actions
     @FXML
     private TextField searchTask;
@@ -46,7 +46,7 @@ public class Controller {
     @FXML
     private Button totalRemindersButton;
 
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Tables
     // Task Table
     @FXML
@@ -107,7 +107,8 @@ public class Controller {
     private TableColumn<Reminder, String> reminderDateCol;
 
     public void initialize() {
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  SETUP  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SETUP
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // Set up the TableView columns
         // Task Table
         setupTaskTableColumns();
@@ -127,8 +128,8 @@ public class Controller {
         // Set up the button actions
         setupButtonActions();
 
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   INITIALIZE  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ INITIALIZE
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // Populate the Task TableView
         PopulateTaskTableView();
 
@@ -137,55 +138,48 @@ public class Controller {
     }
 
     // Methods
-
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    SETUP    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SETUP
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     // Setup the TableView columns
-
     // Task Table
     private void setupTaskTableColumns() {
-        taskNameColumn.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getName()));
-        taskDescriptionColumn.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getDescription()));
-        taskCategoryColumn.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getCategory()));
-        taskStatusColumn.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getStatus()));
-        taskPriorityColumn.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getPriorityName()));
-        taskDeadlineColumn.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getDeadline().toString()));
+        taskNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        taskDescriptionColumn
+                .setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
+        taskCategoryColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCategory()));
+        taskStatusColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
+        taskPriorityColumn
+                .setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPriorityName()));
+        taskDeadlineColumn.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getDeadline().toString()));
     }
 
     // Categories Table
     private void setupCategoryTableColumns() {
-        categoryNameColumn.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getName()));
-        categoryNoTasksColumn.setCellValueFactory(cellData
-                -> new SimpleIntegerProperty(cellData.getValue().getTasks().size()).asObject());
+        categoryNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        categoryNoTasksColumn.setCellValueFactory(
+                cellData -> new SimpleIntegerProperty(cellData.getValue().getTasks().size()).asObject());
     }
 
     // Priorities Table
     private void setupPriorityTableColumns() {
-        priorityNameColumn.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getName()));
-        priorityNoTasksColumn.setCellValueFactory(cellData
-                -> new SimpleIntegerProperty(cellData.getValue().getTasks().size()).asObject());
+        priorityNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        priorityNoTasksColumn.setCellValueFactory(
+                cellData -> new SimpleIntegerProperty(cellData.getValue().getTasks().size()).asObject());
     }
 
     // Reminder Table
     private void setupReminderTableColumns() {
-        reminderTaskNameCol.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getTask().getName()));
-        reminderTaskDescCol.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getTask().getDescription()));
-        reminderTaskDeadlineCol.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getTask().getDeadline().toString()));
-        reminderDateCol.setCellValueFactory(cellData
-                -> new SimpleStringProperty(cellData.getValue().getReminderDate().toString()));
+        reminderTaskNameCol
+                .setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTask().getName()));
+        reminderTaskDescCol.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getTask().getDescription()));
+        reminderTaskDeadlineCol.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getTask().getDeadline().toString()));
+        reminderDateCol.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getReminderDate().toString()));
     }
 
     private void setupSearchBar() {
@@ -199,10 +193,11 @@ public class Controller {
                 taskTableView.getItems().clear();
                 taskTableView.getItems().addAll(TaskList.tasks.stream()
                         .filter(task -> task.getName().toLowerCase().contains(newValue.toLowerCase())
-                        || task.getDescription().toLowerCase().contains(newValue.toLowerCase())
-                        || task.getCategory().toLowerCase().contains(newValue.toLowerCase())
-                        || task.getPriorityName().toLowerCase().contains(newValue.toLowerCase())
-                        || task.getDeadline().toString().contains(newValue)) // Handling LocalDate.toString() format
+                                || task.getDescription().toLowerCase().contains(newValue.toLowerCase())
+                                || task.getCategory().toLowerCase().contains(newValue.toLowerCase())
+                                || task.getPriorityName().toLowerCase().contains(newValue.toLowerCase())
+                                || task.getDeadline().toString().contains(newValue)) // Handling LocalDate.toString()
+                                                                                     // format
                         .collect(Collectors.toList()));
             }
 
@@ -219,7 +214,6 @@ public class Controller {
         totalRemindersButton.setOnAction(event -> PopulateReminderTableView());
 
         // Set up the TableView actions
-
         // taskTableView
         ContextMenu taskContextMenu = new ContextMenu();
 
@@ -283,12 +277,48 @@ public class Controller {
                 categContextMenu.show(categoryTableView, eh.getScreenX(), eh.getScreenY());
             }
         });
+
+        // priorityTableView
+        ContextMenu prioContextMenu = new ContextMenu();
+
+        MenuItem editPriority = new MenuItem("Edit Priority");
+        MenuItem deletePriority = new MenuItem("Delete Priority");
+
+        editPriority.setOnAction(eh -> {
+            Priority selectedPriority = priorityTableView.getSelectionModel().getSelectedItem();
+            if (selectedPriority != null) {
+                System.out.println("Edit Priority: " + selectedPriority.getName());
+            }
+        });
+        deletePriority.setOnAction(eh -> {
+            Priority selectedPriority = priorityTableView.getSelectionModel().getSelectedItem();
+            if (selectedPriority != null) {
+                System.out.println("Delete Priority: " + selectedPriority.getName());
+                if (selectedPriority.getName().equals("Default")) {
+                    selectedPriority.deleteDefaultPriority();
+                } else {
+                    App.deletePriority(selectedPriority);
+                }
+                PopulatePriorityTableView();
+                showTaskBarChart();
+            }
+        });
+
+        prioContextMenu.getItems().addAll(editPriority, deletePriority);
+
+        priorityTableView.setOnMouseClicked(eh -> {
+            Priority selectedPriority = priorityTableView.getSelectionModel().getSelectedItem();
+            if (selectedPriority != null) {
+                System.out.println("Selected Priority: " + selectedPriority.getName());
+                prioContextMenu.show(priorityTableView, eh.getScreenX(), eh.getScreenY());
+            }
+        });
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    Actions     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Actions
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     // Search Bar
     public void showSearchBar() {
         searchTask.setVisible(true);
@@ -349,10 +379,13 @@ public class Controller {
         series.setName("Tasks Statuses");
 
         long totalTasks = TaskList.tasks.size();
-        long completedTasks = TaskList.tasks.stream().filter(task -> "Completed".equals(task.getStatus())).toArray().length;
+        long completedTasks = TaskList.tasks.stream().filter(task -> "Completed".equals(task.getStatus()))
+                .toArray().length;
         long delayedTasks = TaskList.tasks.stream().filter(task -> "Delayed".equals(task.getStatus())).toArray().length;
-        long tasksDueWeek = TaskList.tasks.stream().filter(task -> task.getDeadline().isBefore(task.getDeadline().plusDays(7))
-                && task.getDeadline().isAfter(LocalDate.now())).toArray().length;
+        long tasksDueWeek = TaskList.tasks.stream()
+                .filter(task -> task.getDeadline().isBefore(task.getDeadline().plusDays(7))
+                        && task.getDeadline().isAfter(LocalDate.now()))
+                .toArray().length;
 
         series.getData().add(new XYChart.Data<>("Total Tasks", totalTasks));
         series.getData().add(new XYChart.Data<>("Completed Tasks", completedTasks));

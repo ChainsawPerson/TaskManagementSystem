@@ -18,4 +18,12 @@ public class DefaultPriority {
     public ArrayList<Task> getTasks() {
         return tasks;
     }
+
+    public void deleteDefaultPriority() {
+        for (Task task : DefaultPriority.tasks) {
+            task.category.deleteTask(task);
+            TaskList.tasks.remove(task);
+        }
+        DefaultPriority.tasks.clear();
+    }
 }

@@ -51,9 +51,9 @@ public class App extends Application {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == buttonTypeSave) {
                 try {
-                    Storing.storeData(TaskList.tasks);
+                    Storing.storeData();
                 } catch (IOException e) {
-                    System.err.println("Error storing data: " + e.getMessage());
+                    System.out.println("Error storing data: " + e.getMessage());
                 }
             } else if (result.get() == buttonTypeNoSave) {
                 // Close without saving

@@ -23,15 +23,12 @@ public class Storing {
     private static final String TASKS_JSON = System.getProperty("user.dir") + File.separator + "medialab" + File.separator + "tasks.json";
 
     // Store Data as JSON
-    public static void storeData(ArrayList<Task> tasks) throws IOException {
+    public static void storeData() throws IOException {
         String d = System.getProperty("user.dir") + File.separator + "medialab";
         File dir = new File(d);
         dir.mkdir(); //Creates the directory
 
-        if (tasks.isEmpty()) {
-            System.out.println("No tasks to save.");
-            return;
-        }
+        ArrayList<Task> tasks = TaskList.tasks;
         JSONArray tasksArray = new JSONArray();
 
         for (Task task : tasks) {
@@ -56,10 +53,8 @@ public class Storing {
         }
 
         // Write JSON file
-        FileWriter file = new FileWriter(TASKS_JSON);
+        FileWriter file = new FileWriter(TASKS_JSON, false);
             file.write(tasksArray.toString());
-            file.flush();
-            file.close();
         
     }
 
