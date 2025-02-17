@@ -43,4 +43,10 @@ public class Category {
     public void addTask(Task t) {
         tasks.add(t);
     }
+
+    // Methods
+    @Override
+    public String toString() {
+        return name;
+    }
 }

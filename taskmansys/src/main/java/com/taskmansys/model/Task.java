@@ -83,7 +83,7 @@ public class Task {
             case "Open":
                 this.status = s;
                 break;
-            case "In Progres":
+            case "In Progress":
                 this.status = s;
                 break;
             case "Postponed":
@@ -172,6 +172,12 @@ public class Task {
 
     public Iterable<Reminder> getReminders() {
         return reminders;
+    }
+
+    public void checkDate() {
+        if (deadline.isBefore(LocalDate.now()) && !"Completed".equals(status)) {
+            status = "Delayed";
+        }
     }
 
 }

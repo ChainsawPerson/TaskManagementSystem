@@ -46,3 +46,10 @@
 
 - OOP design principles
 - Javadoc
+
+
+# ToDo:
+
+- GUI
+- Javadoc
+- Report

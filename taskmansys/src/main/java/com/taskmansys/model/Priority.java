@@ -73,4 +73,10 @@ public class Priority extends DefaultPriority{
         tasks.clear();
         super.name = null;
     }
+
+    // Methods
+    @Override
+    public String toString() {
+        return name;
+    }
 }
