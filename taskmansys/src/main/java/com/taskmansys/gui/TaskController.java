@@ -28,13 +28,13 @@ public class TaskController {
     private TextField taskDescrTF;
 
     @FXML
-    private ComboBox categSelector;
+    private ComboBox<String> categSelector;
 
     @FXML
-    private ComboBox prioSelector;
+    private ComboBox<String> prioSelector;
 
     @FXML
-    private ComboBox statusSelector;
+    private ComboBox<String> statusSelector;
 
     @FXML
     private DatePicker datePicker;
@@ -47,11 +47,13 @@ public class TaskController {
 
     private Task task;  // Store the task to apply or discard changes
 
-    @SuppressWarnings("unchecked")
     public void initialize() {
         categSelector.setEditable(true);
-        categSelector.getItems().addAll(App.getCategories());
-
+        categSelector.getItems().addAll(
+                App.getCategories().stream()
+                        .map(Category::getName)
+                        .collect(Collectors.toList())
+        );
         prioSelector.setEditable(true);
         prioSelector.getItems().addAll(
                 App.getPriorities().stream() // Convert the list of priorities to a stream
@@ -89,24 +91,24 @@ public class TaskController {
             task.changeDescription(taskDescrTF.getText()); // Apply description change
 
             Category selectedCategory = App.getCategories().stream()
-                    .filter(category -> category.getName().equals(categSelector.getValue().toString()))
+                    .filter(category -> category.getName().equals(categSelector.getValue()))
                     .findFirst()
-                    .orElse(new Category(categSelector.getValue().toString())); // Creates new if no category is found
+                    .orElse(new Category(categSelector.getValue())); // Creates new if no category is found
             if (!App.getCategories().contains(selectedCategory)) {
                 App.getCategories().add(selectedCategory); // Add category to Categories list
             }
             task.changeCategory(selectedCategory);
 
             Priority selectedPriority = App.getPriorities().stream()
-                    .filter(priority -> priority.getName().equals(prioSelector.getValue().toString()))
+                    .filter(priority -> priority.getName().equals(prioSelector.getValue()))
                     .findFirst()
-                    .orElse(new Priority(prioSelector.getValue().toString())); // Returns Default if no priority is found
+                    .orElse(new Priority(prioSelector.getValue())); // Returns Default if no priority is found
             if( !App.getPriorities().contains(selectedPriority)) {
                 App.getPriorities().add(selectedPriority);
             }
             task.changePriority(selectedPriority);
 
-            task.changeStatus(statusSelector.getValue().toString());
+            task.changeStatus(statusSelector.getValue());
 
             task.changeDeadline(datePicker.getValue());
 

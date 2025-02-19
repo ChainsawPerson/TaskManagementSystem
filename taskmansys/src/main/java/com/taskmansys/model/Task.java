@@ -22,11 +22,13 @@ public class Task {
         this.deadline = dl;
         this.status = "Open";
         this.reminders = new ArrayList<>();
+        initializeTask();
+    }
+
+    public final void initializeTask() {
         category.addTask(this); // Update category list
         priority.addTask(this); // Update priority list
     }
-
-    // Getters
 
     public String getName() {
         return name;
@@ -76,6 +78,10 @@ public class Task {
         priority.deleteTask(this);
         priority = p;
         p.addTask(this);
+    }
+
+    public void deletePriority(Priority p) {
+        priority = p;
     }
 
     public void changeDeadline(LocalDate d) {

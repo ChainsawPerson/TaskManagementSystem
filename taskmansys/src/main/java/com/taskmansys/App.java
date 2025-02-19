@@ -88,10 +88,6 @@ public class App extends Application {
         }
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
@@ -123,9 +119,9 @@ public class App extends Application {
     }
 
     public static void deletePriority(Priority priority) {
+        priority.deletePriority();
         if (!priority.getName().equals("Default")) {
             priorities.remove(priority);
-            priority.deletePriority();
         }
     }
 

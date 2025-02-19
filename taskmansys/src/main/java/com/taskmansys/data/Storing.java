@@ -53,8 +53,9 @@ public class Storing {
         }
 
         // Write JSON file
-        FileWriter file = new FileWriter(TASKS_JSON, false);
+        try (FileWriter file = new FileWriter(TASKS_JSON, false)) {
             file.write(tasksArray.toString());
+        }
         
     }
 
