@@ -29,7 +29,7 @@ public class Category {
 
     public void deleteCategory() {
         for (Task task : tasks) {
-            task.gePriority().deleteTask(task);
+            task.getPriority().deleteTask(task);
             TaskList.tasks.remove(task);
         }
         tasks.clear();

@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -33,6 +34,7 @@ public class App extends Application {
         initializeData();
         scene = new Scene(loadFXML("primary"), 1280, 720);
         stage.setTitle("MediaLab Assistant");
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("icon.png")));
         stage.setScene(scene);
         stage.show();
 

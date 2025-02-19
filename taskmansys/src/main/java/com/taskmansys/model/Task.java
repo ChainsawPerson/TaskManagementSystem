@@ -44,7 +44,7 @@ public class Task {
         return priority.getName();
     }
 
-    public Priority gePriority() {
+    public Priority getPriority() {
         return priority;
     }
 
@@ -67,11 +67,15 @@ public class Task {
     }
 
     public void changeCategory(Category c) {
+        category.deleteTask(this);
         category = c;
+        c.addTask(this);
     }
 
     public void changePriority(Priority p) {
+        priority.deleteTask(this);
         priority = p;
+        p.addTask(this);
     }
 
     public void changeDeadline(LocalDate d) {
@@ -177,6 +181,9 @@ public class Task {
     public void checkDate() {
         if (deadline.isBefore(LocalDate.now()) && !"Completed".equals(status)) {
             status = "Delayed";
+        }
+        else if (status.equals("Delayed") && deadline.isAfter(LocalDate.now())) {
+            status = "In Progress";           
         }
     }
 

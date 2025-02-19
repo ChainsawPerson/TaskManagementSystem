@@ -3,6 +3,7 @@ module com.taskmansys {
     requires javafx.fxml;
     requires org.json;
     
-    opens com.taskmansys to javafx.fxml;
+    opens com.taskmansys.gui to javafx.fxml;
     exports com.taskmansys;
+    exports com.taskmansys.gui;
 }

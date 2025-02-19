@@ -1,8 +1,10 @@
-package com.taskmansys;
+package com.taskmansys.gui;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 
+import com.taskmansys.App;
 import com.taskmansys.model.Category;
 import com.taskmansys.model.Priority;
 import com.taskmansys.model.Reminder;
@@ -12,6 +14,8 @@ import com.taskmansys.model.TaskList;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -22,6 +26,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 public class Controller {
 
@@ -130,8 +136,8 @@ public class Controller {
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ INITIALIZE
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // Populate the Task TableView
-        PopulateTaskTableView();
+        // populate the Task TableView
+        populateTaskTableView();
 
         // Show the Task Bar Chart
         showTaskBarChart();
@@ -139,8 +145,7 @@ public class Controller {
 
     // Methods
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SETUP
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //                                              SETUP
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Setup the TableView columns
     // Task Table
@@ -208,10 +213,10 @@ public class Controller {
 
     private void setupButtonActions() {
         // Tabs
-        totalTasksButton.setOnAction(event -> PopulateTaskTableView());
-        totalCategoriesButton.setOnAction(event -> PopulateCategoryTableView());
-        totalPrioritiesButton.setOnAction(event -> PopulatePriorityTableView());
-        totalRemindersButton.setOnAction(event -> PopulateReminderTableView());
+        totalTasksButton.setOnAction(event -> populateTaskTableView());
+        totalCategoriesButton.setOnAction(event -> populateCategoryTableView());
+        totalPrioritiesButton.setOnAction(event -> populatePriorityTableView());
+        totalRemindersButton.setOnAction(event -> populateReminderTableView());
 
         // Set up the TableView actions
         // taskTableView
@@ -224,6 +229,11 @@ public class Controller {
             Task selectedTask = taskTableView.getSelectionModel().getSelectedItem();
             if (selectedTask != null) {
                 System.out.println("Edit Task: " + selectedTask.getName());
+                try {
+                    openEditWindow(selectedTask);
+                } catch (Exception e) {
+                    System.err.println("Could not open window: " + e.getMessage());
+                }
             }
         });
         deleteTask.setOnAction(eh -> {
@@ -231,7 +241,7 @@ public class Controller {
             if (selectedTask != null) {
                 System.out.println("Delete Task: " + selectedTask.getName());
                 App.deleteTask(selectedTask);
-                PopulateTaskTableView();
+                populateTaskTableView();
                 showTaskBarChart();
             }
         });
@@ -263,7 +273,7 @@ public class Controller {
             if (selectedCategory != null) {
                 System.out.println("Delete category: " + selectedCategory.getName());
                 App.deleteCategory(selectedCategory);
-                PopulateCategoryTableView();
+                populateCategoryTableView();
                 showTaskBarChart();
             }
         });
@@ -299,7 +309,7 @@ public class Controller {
                 } else {
                     App.deletePriority(selectedPriority);
                 }
-                PopulatePriorityTableView();
+                populatePriorityTableView();
                 showTaskBarChart();
             }
         });
@@ -313,11 +323,39 @@ public class Controller {
                 prioContextMenu.show(priorityTableView, eh.getScreenX(), eh.getScreenY());
             }
         });
+
+        // reminderTableView
+        ContextMenu reminderContextMenu = new ContextMenu();
+
+        MenuItem editReminder = new MenuItem("Edit Reminder");
+        MenuItem deleteReminder = new MenuItem("Delete Reminder");
+
+        editReminder.setOnAction(eh -> {
+            Reminder selectedReminder = reminderTableView.getSelectionModel().getSelectedItem();
+            if (selectedReminder != null) {
+                System.out.println("Edit Reminder: " + selectedReminder.getReminderDate().toString());
+            }
+        });
+        deleteReminder.setOnAction(eh -> {
+            Reminder selectedReminder = reminderTableView.getSelectionModel().getSelectedItem();
+            if (selectedReminder != null) {
+                selectedReminder.deleteReminder();
+                populateReminderTableView();
+            }
+        });
+
+        reminderContextMenu.getItems().addAll(editReminder, deleteReminder);
+
+        reminderTableView.setOnMouseClicked(eh -> {
+            Reminder selectedReminder = reminderTableView.getSelectionModel().getSelectedItem();
+            if (selectedReminder != null) {
+                reminderContextMenu.show(reminderTableView, eh.getScreenX(), eh.getScreenY());
+            }
+        });
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Actions
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //                                           Actions
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Search Bar
     public void showSearchBar() {
@@ -328,7 +366,7 @@ public class Controller {
         searchTask.setVisible(false);
     }
 
-    public void PopulateTaskTableView() {
+    public void populateTaskTableView() {
         taskTableView.getItems().clear();
         taskTableView.getItems().addAll(TaskList.tasks);
         taskTableView.refresh();
@@ -336,7 +374,7 @@ public class Controller {
         showSearchBar();
     }
 
-    public void PopulateCategoryTableView() {
+    public void populateCategoryTableView() {
         categoryTableView.getItems().clear();
         categoryTableView.getItems().addAll(App.getCategories());
         categoryTableView.refresh();
@@ -344,7 +382,7 @@ public class Controller {
         hideSearchBar();
     }
 
-    public void PopulatePriorityTableView() {
+    public void populatePriorityTableView() {
         priorityTableView.getItems().clear();
         priorityTableView.getItems().addAll(App.getPriorities());
         priorityTableView.refresh();
@@ -352,7 +390,7 @@ public class Controller {
         hideSearchBar();
     }
 
-    public void PopulateReminderTableView() {
+    public void populateReminderTableView() {
         reminderTableView.getItems().clear();
         for (Task task : TaskList.tasks) {
             for (Reminder reminder : task.getReminders()) {
@@ -394,5 +432,30 @@ public class Controller {
 
         taskBarChart.getData().add(series);
 
+    }
+
+    public void openEditWindow(Task task) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(App.class.getResource("task.fxml"));
+
+        Scene scene = new Scene(loader.load(), 420, 540);
+        Stage stage = new Stage();
+
+        // Get the controller
+        TaskController controller = loader.getController();
+        controller.editTask(task);
+        controller.setOriginalWindow(this);
+
+        stage.setTitle("Edit");
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("icon.png")));
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void refresh() {
+        taskTableView.refresh();
+        categoryTableView.refresh();
+        priorityTableView.refresh();
+        reminderTableView.refresh();
     }
 }

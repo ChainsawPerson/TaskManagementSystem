@@ -1,0 +1,130 @@
+package com.taskmansys.gui;
+
+import java.util.stream.Collectors;
+
+import com.taskmansys.App;
+import com.taskmansys.model.Category;
+import com.taskmansys.model.Priority;
+import com.taskmansys.model.Task;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+
+public class TaskController {
+    private Controller originalWindow;
+
+    @FXML
+    private AnchorPane editWindow;
+
+    @FXML
+    private TextField taskNameTF;
+
+    @FXML
+    private TextField taskDescrTF;
+
+    @FXML
+    private ComboBox categSelector;
+
+    @FXML
+    private ComboBox prioSelector;
+
+    @FXML
+    private ComboBox statusSelector;
+
+    @FXML
+    private DatePicker datePicker;
+
+    @FXML
+    private Button saveButton;
+
+    @FXML
+    private Button cancelButton;
+
+    private Task task;  // Store the task to apply or discard changes
+
+    @SuppressWarnings("unchecked")
+    public void initialize() {
+        categSelector.setEditable(true);
+        categSelector.getItems().addAll(App.getCategories());
+
+        prioSelector.setEditable(true);
+        prioSelector.getItems().addAll(
+                App.getPriorities().stream() // Convert the list of priorities to a stream
+                        .map(prio -> prio.getName()) // Extract the name of each priority
+                        .collect(Collectors.toList()) // Collect the names into a List
+        );
+        String statusVars[] = {"Open", "In Progress", "Postponed", "Completed", "Delayed"};
+        statusSelector.getItems().addAll(statusVars);
+
+        // Set the saveButton and cancelButton actions
+        saveButton.setOnAction(event -> saveTask());
+        cancelButton.setOnAction(event -> cancelTask());
+    }
+
+    public void setOriginalWindow(Controller c) {
+        this.originalWindow = c;
+    }
+
+    // Method to edit the task and pre-populate the fields with the task's current data
+    public void editTask(Task task) {
+        this.task = task; // Store the task reference to use later
+        taskNameTF.setText(task.getName()); // Populate the TextField with task name
+        taskDescrTF.setText(task.getDescription()); // Populate with task description
+        categSelector.getSelectionModel().select(task.getCategory()); // Set the category
+        prioSelector.getSelectionModel().select(task.getPriorityName()); // Set the Priority
+        statusSelector.getSelectionModel().select("Open"); // Set the Status
+        datePicker.setValue(task.getDeadline());
+    }
+
+    // Save method to apply changes to the task
+    private void saveTask() {
+        if (task != null) {
+            task.changeName(taskNameTF.getText()); // Apply the name change
+
+            task.changeDescription(taskDescrTF.getText()); // Apply description change
+
+            Category selectedCategory = App.getCategories().stream()
+                    .filter(category -> category.getName().equals(categSelector.getValue().toString()))
+                    .findFirst()
+                    .orElse(new Category(categSelector.getValue().toString())); // Creates new if no category is found
+            if (!App.getCategories().contains(selectedCategory)) {
+                App.getCategories().add(selectedCategory); // Add category to Categories list
+            }
+            task.changeCategory(selectedCategory);
+
+            Priority selectedPriority = App.getPriorities().stream()
+                    .filter(priority -> priority.getName().equals(prioSelector.getValue().toString()))
+                    .findFirst()
+                    .orElse(new Priority(prioSelector.getValue().toString())); // Returns Default if no priority is found
+            if( !App.getPriorities().contains(selectedPriority)) {
+                App.getPriorities().add(selectedPriority);
+            }
+            task.changePriority(selectedPriority);
+
+            task.changeStatus(statusSelector.getValue().toString());
+
+            task.changeDeadline(datePicker.getValue());
+
+            System.out.println("Task saved: " + task.getName());
+
+            closeWindow();
+        }
+    }
+
+    // Cancel method to discard changes and close the window
+    private void cancelTask() {
+        System.out.println("Changes discarded.");
+        closeWindow();
+    }
+
+    private void closeWindow() {
+        Stage stage = (Stage) editWindow.getScene().getWindow();
+        stage.close();
+        originalWindow.refresh();
+    }
+}

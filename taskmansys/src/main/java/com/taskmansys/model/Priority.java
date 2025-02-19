@@ -35,7 +35,7 @@ public class Priority extends DefaultPriority{
 
     public void moveTask(Task t) { // Method to move between Custom and Default
 
-        if (t.gePriority() == this) { // Custom to Default
+        if (t.getPriority() == this) { // Custom to Default
             tasks.remove(t);
             DefaultPriority.tasks.add(t);
             t.changePriority(new Priority());
@@ -48,7 +48,7 @@ public class Priority extends DefaultPriority{
         } 
 
         else { // Another Custom to this Custom
-            t.gePriority().getTasks().remove(t);
+            t.getPriority().getTasks().remove(t);
             tasks.add(t);
             t.changePriority(this);
         }
