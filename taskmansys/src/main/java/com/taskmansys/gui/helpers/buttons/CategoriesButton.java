@@ -16,7 +16,10 @@ import javafx.scene.control.TextField;
 public class CategoriesButton {
     public static void setupCategoriesButton(Controller controller, Button totalCategoriesButton, TableView<Category> categoryTableView, TextField searchTask, BarChart<String, Number> taskBarChart) {
         // Handler for Categories Button and Categories Functions:
-        totalCategoriesButton.setOnAction(event -> CategoryTableViewHelper.populateCategoryTableView(categoryTableView, searchTask));
+        totalCategoriesButton.setOnAction(event -> {
+            CategoryTableViewHelper.populateCategoryTableView(categoryTableView, searchTask);
+            categoryTableView.toFront();
+        });
 
         // categoryTableView Functions (Edit/Delete)
         ContextMenu categContextMenu = new ContextMenu();

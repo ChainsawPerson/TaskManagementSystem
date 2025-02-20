@@ -22,7 +22,6 @@ public class PriorityTableViewHelper {
         priorityTableView.getItems().clear();
         priorityTableView.getItems().addAll(App.getPriorities());
         priorityTableView.refresh();
-        priorityTableView.toFront();
         SearchBar.hideSearchBar(searchTask);
     }
 }

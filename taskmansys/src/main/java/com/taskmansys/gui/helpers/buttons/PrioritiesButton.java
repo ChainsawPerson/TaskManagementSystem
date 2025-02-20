@@ -16,7 +16,10 @@ import javafx.scene.control.TextField;
 public class PrioritiesButton {
     public static void setupPrioritiesButton(Controller controller, Button totalPrioritiesButton, TableView<Priority> priorityTableView, TextField searchTask, BarChart<String, Number> taskBarChart) {
         // Handler for Priorities Button and Priorities Functions:
-        totalPrioritiesButton.setOnAction(event -> PriorityTableViewHelper.populatePriorityTableView(priorityTableView, searchTask));
+        totalPrioritiesButton.setOnAction(event -> {
+            PriorityTableViewHelper.populatePriorityTableView(priorityTableView, searchTask);
+            priorityTableView.toFront();
+        });
 
         // priorityTableView Functions (Edit/Delete)
         ContextMenu prioContextMenu = new ContextMenu();

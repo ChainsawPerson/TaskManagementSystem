@@ -32,7 +32,6 @@ public class ReminderTableViewHelper {
             }
         }
         reminderTableView.refresh();
-        reminderTableView.toFront();
         SearchBar.hideSearchBar(searchTask);
     }
 }

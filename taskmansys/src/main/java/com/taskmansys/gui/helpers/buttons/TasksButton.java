@@ -18,7 +18,10 @@ import javafx.scene.control.TextField;
 public class TasksButton {
     public static void setupTasksButton(Controller controller, Button totalTasksButton, TableView<Task> taskTableView, TextField searchTask, BarChart<String, Number> taskBarChart) {
         // Handler for Tasks Button and Tasks Functions:
-        totalTasksButton.setOnAction(event -> TaskTableViewHelper.populateTaskTableView(taskTableView, searchTask));
+        totalTasksButton.setOnAction(event -> {
+            TaskTableViewHelper.populateTaskTableView(taskTableView, searchTask);
+            taskTableView.toFront();
+        });
         
         // taskTableView Functions (Edit/Delete)
         ContextMenu taskContextMenu = new ContextMenu();

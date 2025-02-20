@@ -30,7 +30,6 @@ public class TaskTableViewHelper {
         taskTableView.getItems().clear();
         taskTableView.getItems().addAll(TaskList.tasks);
         taskTableView.refresh();
-        taskTableView.toFront();
         SearchBar.showSearchBar(searchTask);
     }
 }

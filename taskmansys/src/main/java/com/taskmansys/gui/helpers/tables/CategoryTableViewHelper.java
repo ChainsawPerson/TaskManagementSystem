@@ -22,7 +22,6 @@ public class CategoryTableViewHelper {
         categoryTableView.getItems().clear();
         categoryTableView.getItems().addAll(App.getCategories());
         categoryTableView.refresh();
-        categoryTableView.toFront();
         SearchBar.hideSearchBar(searchTask);
     }
 }

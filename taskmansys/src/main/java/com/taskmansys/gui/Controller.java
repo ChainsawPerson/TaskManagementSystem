@@ -6,6 +6,7 @@ import com.taskmansys.App;
 import com.taskmansys.gui.helpers.SearchBar;
 import com.taskmansys.gui.helpers.TaskBarChartHelper;
 import com.taskmansys.gui.helpers.buttons.CategoriesButton;
+import com.taskmansys.gui.helpers.buttons.CreateButton;
 import com.taskmansys.gui.helpers.buttons.PrioritiesButton;
 import com.taskmansys.gui.helpers.buttons.RemindersButton;
 import com.taskmansys.gui.helpers.buttons.TasksButton;
@@ -142,8 +143,9 @@ public class Controller {
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         //  INITIALIZE
 
-        // populate the Task TableView
-        TaskTableViewHelper.populateTaskTableView(taskTableView, searchTask);
+        // Populate all TableView
+        refresh();
+        taskTableView.toFront();
 
         // Show the Task Bar Chart
         TaskBarChartHelper.showTaskBarChart(taskBarChart);
@@ -151,7 +153,7 @@ public class Controller {
 
     // Methods
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    //                                              SETUP
+    //                                            SETUP
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     private void setupButtonActions() {
@@ -162,37 +164,49 @@ public class Controller {
         RemindersButton.setupRemindersButton(this, totalRemindersButton, reminderTableView, searchTask);
 
         // Set up the create button
-        
+        CreateButton.setupCreateButton(this, createButton);
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //                                           Actions
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    
-
-    public void openEditWindow(Task task) throws IOException {
+    public void openTaskWindow(String title, Task task) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(App.class.getResource("task.fxml"));
-
+    
         Scene scene = new Scene(loader.load(), 420, 540);
         Stage stage = new Stage();
-
+    
         // Get the controller
         TaskController controller = loader.getController();
-        controller.editTask(task);
         controller.setOriginalWindow(this);
-
-        stage.setTitle("Edit");
+    
+        if (task != null) {
+            // If the task is not null, edit the task
+            controller.editTask(task);
+        } else {
+            controller.createTask();
+        }
+    
+        stage.setTitle(title);
         stage.getIcons().add(new Image(App.class.getResourceAsStream("icon.png")));
         stage.setScene(scene);
         stage.show();
     }
-
+    
+    public void openCreateWindow() throws IOException {
+        openTaskWindow("Create Task", null);
+    }
+    
+    public void openEditWindow(Task task) throws IOException {
+        openTaskWindow("Edit", task);
+    }
     public void refresh() {
-        taskTableView.refresh();
-        categoryTableView.refresh();
-        priorityTableView.refresh();
-        reminderTableView.refresh();
+        TaskTableViewHelper.populateTaskTableView(taskTableView, searchTask);
+        CategoryTableViewHelper.populateCategoryTableView(categoryTableView, searchTask);
+        PriorityTableViewHelper.populatePriorityTableView(priorityTableView, searchTask);
+        ReminderTableViewHelper.populateReminderTableView(reminderTableView, searchTask);
+        TaskBarChartHelper.showTaskBarChart(taskBarChart);
     }
 }

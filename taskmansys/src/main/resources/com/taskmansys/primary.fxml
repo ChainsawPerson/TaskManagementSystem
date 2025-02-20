@@ -33,8 +33,6 @@
             <TextField fx:id="searchTask" layoutX="1104.0" promptText="Search" />
             <MenuButton fx:id="createButton" layoutX="1184.0" layoutY="446.0" mnemonicParsing="false" text="Create:">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Action 1" />
-                  <MenuItem mnemonicParsing="false" text="Action 2" />
                </items>
             </MenuButton>
             <Pane fx:id="taskPane" layoutY="25.0">

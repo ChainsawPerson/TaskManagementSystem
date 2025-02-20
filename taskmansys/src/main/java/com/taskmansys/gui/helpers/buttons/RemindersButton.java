@@ -13,7 +13,10 @@ import javafx.scene.control.TextField;
 public class RemindersButton {
     public static void setupRemindersButton(Controller controller, Button totalRemindersButton, TableView<Reminder> reminderTableView, TextField searchTask) {
         // Handler for Reminders Button and Reminders Functions:
-        totalRemindersButton.setOnAction(event -> ReminderTableViewHelper.populateReminderTableView(reminderTableView, searchTask));
+        totalRemindersButton.setOnAction(event -> {
+            ReminderTableViewHelper.populateReminderTableView(reminderTableView, searchTask);
+            reminderTableView.toFront();
+        });
 
         // reminderTableView Functions (Edit/Delete)
         ContextMenu reminderContextMenu = new ContextMenu();
