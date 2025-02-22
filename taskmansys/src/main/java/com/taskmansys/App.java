@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -37,6 +38,7 @@ public class App extends Application {
         stage.getIcons().add(new Image(App.class.getResourceAsStream("icon.png")));
         stage.setScene(scene);
         stage.show();
+        checkReminders();
 
         stage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -85,6 +87,23 @@ public class App extends Application {
         // Check for delays
         for (Task task : TaskList.tasks) {
             task.checkDate();
+        }
+    }
+
+    private void checkReminders() {
+        for (Task task : TaskList.tasks) {
+            if (task.checkReminders()) {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Task is due soon");
+                alert.setHeaderText("Task: " + task.getName() + "\n" + task.getDescription() + "\nTask due at: " + task.getDeadline().toString());
+                alert.showAndWait();
+            }
+            if (task.getStatus().equals("Delayed")) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Task is Delayed");
+                alert.setHeaderText("Task: " + task.getName() + "\n" + task.getDescription() + "\nTask past due date: " + task.getDeadline().toString());
+                alert.showAndWait();
+            }
         }
     }
 

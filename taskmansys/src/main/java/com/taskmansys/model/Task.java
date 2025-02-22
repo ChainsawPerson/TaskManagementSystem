@@ -86,6 +86,7 @@ public class Task {
 
     public void changeDeadline(LocalDate d) {
         deadline = d;
+        checkDate();
     }
 
     public void changeStatus(String s) {
@@ -105,6 +106,7 @@ public class Task {
                 break;
             case "Delayed":
                 this.status = s;
+                reminders.clear();
                 break;
             default:
                 System.err.println("Error, invalid status!");
@@ -152,10 +154,13 @@ public class Task {
         reminders.remove(r);
     }
 
-    public void checkReminders() {
+    public Boolean checkReminders() {
         for (Reminder reminder : reminders) {
-            reminder.checkDate();
+            if (reminder.checkDate()) {
+                return true;
+            }
         }
+        return false;
     }
 
     // Task
@@ -186,10 +191,10 @@ public class Task {
 
     public void checkDate() {
         if (deadline.isBefore(LocalDate.now()) && !"Completed".equals(status)) {
-            status = "Delayed";
+            changeStatus("Delayed");
         }
         else if (status.equals("Delayed") && deadline.isAfter(LocalDate.now())) {
-            status = "In Progress";           
+            changeStatus("In Progress");           
         }
     }
 

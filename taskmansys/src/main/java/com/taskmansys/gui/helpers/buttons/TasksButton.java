@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.taskmansys.App;
 import com.taskmansys.gui.Controller;
+import com.taskmansys.gui.EditWindow;
 import com.taskmansys.gui.helpers.TaskBarChartHelper;
 import com.taskmansys.gui.helpers.tables.TaskTableViewHelper;
 import com.taskmansys.model.Task;
@@ -26,9 +27,17 @@ public class TasksButton {
         // taskTableView Functions (Edit/Delete)
         ContextMenu taskContextMenu = new ContextMenu();
 
+        MenuItem addReminder = new MenuItem("Add Reminder");
         MenuItem editTask = new MenuItem("Edit Task");
         MenuItem deleteTask = new MenuItem("Delete Task");
 
+        addReminder.setOnAction(eh -> {
+            Task selectedTask = taskTableView.getSelectionModel().getSelectedItem();
+            if (selectedTask != null) {
+                System.out.println("Add Reminder to Task: " + selectedTask.getName());
+                EditWindow.createReminderWindow(controller, selectedTask);
+            }
+        });
         editTask.setOnAction(eh -> {
             Task selectedTask = taskTableView.getSelectionModel().getSelectedItem();
             if (selectedTask != null) {
@@ -50,7 +59,7 @@ public class TasksButton {
             }
         });
 
-        taskContextMenu.getItems().addAll(editTask, deleteTask);
+        taskContextMenu.getItems().addAll(addReminder, editTask, deleteTask);
 
         taskTableView.setOnMouseClicked(eh -> {
             Task selectedTask = taskTableView.getSelectionModel().getSelectedItem();

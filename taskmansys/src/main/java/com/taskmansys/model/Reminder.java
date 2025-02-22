@@ -33,13 +33,8 @@ public class Reminder {
         task.deleteReminder(this);
     }
 
-    public void checkDate() {
-        if (LocalDate.now() == date) {
-            /*
-             * Do stuff
-             */
-            System.out.println("Task is due!");
-        }
+    public Boolean checkDate() {
+        return LocalDate.now().equals(date);
     }
 
 }
