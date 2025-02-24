@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.taskmansys.App;
 import com.taskmansys.model.Category;
 import com.taskmansys.model.Priority;
+import com.taskmansys.model.Reminder;
 import com.taskmansys.model.Task;
 
 import javafx.scene.Scene;
@@ -18,7 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class EditWindow {
-    public static void createWindow(String creation, Controller controller) {
+    public static void createWindow(String creation, Controller controller) { // Create new Category or Property
         // Create a new Stage (popup window)
         Stage stage = new Stage();
 
@@ -59,7 +60,7 @@ public class EditWindow {
             }
             stage.close();  // Close the window after saving
             controller.refresh();
-        });
+        });       
 
         cancelButton.setOnAction(eh -> {
             stage.close();  // Close the window without making any changes
@@ -86,7 +87,89 @@ public class EditWindow {
         stage.show();
     }
 
-    public static void createReminderWindow(Controller controller, Task task) {
+    public static void editExisting(Category cat, Priority prio, Controller controller) {
+        // Create a new Stage (popup window)
+        Stage stage = new Stage();
+        String name;
+        // Create a TextField for input
+        TextField textField = new TextField();
+        if (cat != null) {
+            name = cat.getName();
+        } else {
+            name = prio.getName();
+        }
+        textField.setPromptText(name);
+
+        // Create OK and Cancel buttons
+        Button okButton = new Button("OK");
+        Button cancelButton = new Button("Cancel");
+
+        // Set up the button actions
+        okButton.setOnAction(eh -> {
+            Boolean exists;
+            String newName = textField.getText();
+            if (cat != null) {
+                exists = App.getCategories().stream().anyMatch(categ -> categ.getName().equals(newName));
+                if (exists) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Duplicate Entry");
+                    alert.setHeaderText("Category with name " + newName + " already exists!");
+                    alert.showAndWait();
+                    return;
+                }
+                cat.changeName(newName);
+            } else {
+                exists = App.getPriorities().stream().anyMatch(priority -> priority.getName().equals(newName));
+                if (exists) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Duplicate Entry");
+                    alert.setHeaderText("Priority with name " + newName + " already exists!");
+                    alert.showAndWait();
+                    return;
+                } 
+                else if (name.equals("Default")) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Default Priority");
+                    alert.setHeaderText("Default priority can't be renamed!");
+                    alert.showAndWait();
+                    return;
+                }
+                prio.changeName(newName);
+            }
+            stage.close();  // Close the window after saving
+            controller.refresh();
+        });       
+
+        cancelButton.setOnAction(eh -> {
+            stage.close();  // Close the window without making any changes
+        });
+
+        // Layout container for the buttons (HBox places buttons horizontally)
+        HBox buttonBox = new HBox(10, okButton, cancelButton); // 10 is the spacing between buttons
+        buttonBox.setStyle("-fx-alignment: center;"); // Center align the buttons
+
+        // Layout container to hold the TextField and Buttons (VBox places elements vertically)
+        VBox vbox = new VBox(10, textField, buttonBox); // Add TextField and buttonBox to VBox
+        vbox.setStyle("-fx-padding: 10;"); // Padding around the VBox
+
+        // Create a Scene with the layout and a defined size
+        Scene scene = new Scene(vbox, 300, 100);  // Width: 300px, Height: 200px
+
+        // Set the scene for the stage
+        stage.setScene(scene);
+
+        // Set the title for the pop-up window
+        if (cat != null) {
+            stage.setTitle("Edit Category name");
+        } else {
+            stage.setTitle("Edit Priority name");
+        }
+
+        // Show the pop-up window
+        stage.show();
+    }
+
+    public static void createReminderWindow(Controller controller, Task task, Reminder reminder) {
         // Create the Window
         Stage stage = new Stage();
 
@@ -98,21 +181,54 @@ public class EditWindow {
 
         // Setup button actions
         oneDayButton.setOnAction(eh -> {
-            task.addReminder("Day");
+            if (LocalDate.now().isAfter(task.getDeadline().minusDays(1))) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Reminder date");
+                alert.setHeaderText("Reminder can't be in the past!");
+                alert.showAndWait();
+                return;
+            }
+            if (reminder != null) {
+                task.editReminder(reminder, "Day");
+            } else {
+                task.addReminder("Day");
+            }
             stage.close();
             controller.refresh();
         });
         oneWeekButton.setOnAction(eh -> {
-            task.addReminder("Week");
+            if (LocalDate.now().isAfter(task.getDeadline().minusWeeks(1))) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Reminder date");
+                alert.setHeaderText("Reminder can't be in the past!");
+                alert.showAndWait();
+                return;
+            }
+            if (reminder != null) {
+                task.editReminder(reminder, "Week");
+            } else {
+                task.addReminder("Week");
+            }
             stage.close();
             controller.refresh();
         });
         oneMonthButton.setOnAction(eh -> {
-            task.addReminder("Month");
+            if (LocalDate.now().isAfter(task.getDeadline().minusMonths(1))) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Reminder date");
+                alert.setHeaderText("Reminder can't be in the past!");
+                alert.showAndWait();
+                return;
+            }
+            if (reminder != null) {
+                task.editReminder(reminder, "Month");
+            } else {
+                task.addReminder("Month");
+            }
             stage.close();
             controller.refresh();
         });
-        customDate.setOnAction(eh -> createCustomReminderWindow(stage, controller, task));
+        customDate.setOnAction(eh -> createCustomReminderWindow(stage, controller, task, reminder));
 
         // Layout
         VBox buttonBox = new VBox(15, oneDayButton, oneWeekButton, oneMonthButton, customDate);
@@ -130,7 +246,7 @@ public class EditWindow {
         stage.show();
     }
 
-    private static void createCustomReminderWindow(Stage prevWin, Controller controller, Task task) {
+    private static void createCustomReminderWindow(Stage prevWin, Controller controller, Task task, Reminder reminder) {
         // Create a new Stage (popup window)
         Stage stage = new Stage();
 
@@ -158,7 +274,11 @@ public class EditWindow {
                 alert.showAndWait();
                 return;
             }
-            task.addReminder(datePicker.getValue());
+            if (reminder != null) {
+                task.editReminder(reminder, datePicker.getValue());
+            } else {
+                task.addReminder(datePicker.getValue());
+            }
             stage.close();
             prevWin.close();
             controller.refresh();

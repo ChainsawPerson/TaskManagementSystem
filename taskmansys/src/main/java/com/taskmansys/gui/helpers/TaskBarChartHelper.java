@@ -29,7 +29,7 @@ public class TaskBarChartHelper {
                 .toArray().length;
         long delayedTasks = TaskList.tasks.stream().filter(task -> "Delayed".equals(task.getStatus())).toArray().length;
         long tasksDueWeek = TaskList.tasks.stream()
-                .filter(task -> task.getDeadline().isBefore(task.getDeadline().plusDays(7))
+                .filter(task -> LocalDate.now().isAfter(task.getDeadline().minusDays(8))
                 && task.getDeadline().isAfter(LocalDate.now()))
                 .toArray().length;
 

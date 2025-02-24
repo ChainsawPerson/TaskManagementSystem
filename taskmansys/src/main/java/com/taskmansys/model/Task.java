@@ -106,7 +106,6 @@ public class Task {
                 break;
             case "Delayed":
                 this.status = s;
-                reminders.clear();
                 break;
             default:
                 System.err.println("Error, invalid status!");
@@ -150,9 +149,32 @@ public class Task {
             r.setReminder(rd);
     }
 
+    public void editReminder(Reminder r, String d) {
+        if (!"Completed".equals(this.status))
+            switch (d) {
+                case "Day":
+                    r.setReminder(deadline.minusDays(1));
+                    break;
+                case "Week":
+                    r.setReminder(deadline.minusWeeks(1));
+                    break;
+                case "Month":
+                    r.setReminder(deadline.minusMonths(1));
+                    break;
+                default:
+                    System.err.println("Invalid default date. Try for custom date?");
+                    break;
+            }
+    }
+
     public void deleteReminder(Reminder r) {
         reminders.remove(r);
     }
+
+    public Iterable<Reminder> getReminders() {
+        return reminders;
+    }
+
 
     public Boolean checkReminders() {
         for (Reminder reminder : reminders) {
@@ -170,11 +192,7 @@ public class Task {
         ret += "Category: " + category.getName() + "\n";
         ret += "Priority: " + priority.getName() + "\n";
         ret += "Deadline: " + deadline.toString() + "\n";
-        ret += "Status: " + status + "\n";
-        ret += "Reminders: \n";
-        for (Reminder reminder : reminders) {
-            ret += reminder.getReminderDate().toString() + "\n";
-        }
+        ret += "Status: " + status;
         return ret;
     }
 
@@ -183,10 +201,6 @@ public class Task {
         priority.deleteTask(this);
         category.deleteTask(this);
         TaskList.tasks.remove(this);
-    }
-
-    public Iterable<Reminder> getReminders() {
-        return reminders;
     }
 
     public void checkDate() {

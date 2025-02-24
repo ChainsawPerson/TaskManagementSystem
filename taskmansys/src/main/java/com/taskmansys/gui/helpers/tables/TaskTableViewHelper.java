@@ -24,11 +24,16 @@ public class TaskTableViewHelper {
                 .setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPriorityName()));
         taskDeadlineColumn.setCellValueFactory(
                 cellData -> new SimpleStringProperty(cellData.getValue().getDeadline().toString()));
+
+        taskTableView.getSortOrder().clear();
+        taskTableView.getSortOrder().add(taskCategoryColumn);
+        taskCategoryColumn.setSortType(TableColumn.SortType.ASCENDING);
     }
 
     public static void populateTaskTableView(TableView<Task> taskTableView, TextField searchTask) {
         taskTableView.getItems().clear();
         taskTableView.getItems().addAll(TaskList.tasks);
+        taskTableView.sort();
         taskTableView.refresh();
         SearchBar.showSearchBar(searchTask);
     }

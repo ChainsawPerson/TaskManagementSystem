@@ -26,7 +26,7 @@ public class Priority extends DefaultPriority{
 
     // Setters
     public void changeName(String n) {
-        if (!"Default".equals(n)) super.name = n;
+        if ((!"Default".equals(n)) || super.name.equals("Default")) super.name = n;
     }
 
     public void addTask(Task t) {

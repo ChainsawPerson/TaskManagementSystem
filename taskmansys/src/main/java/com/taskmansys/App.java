@@ -95,13 +95,13 @@ public class App extends Application {
             if (task.checkReminders()) {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Task is due soon");
-                alert.setHeaderText("Task: " + task.getName() + "\n" + task.getDescription() + "\nTask due at: " + task.getDeadline().toString());
+                alert.setHeaderText(task.getTaskInfo());
                 alert.showAndWait();
             }
             if (task.getStatus().equals("Delayed")) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Task is Delayed");
-                alert.setHeaderText("Task: " + task.getName() + "\n" + task.getDescription() + "\nTask past due date: " + task.getDeadline().toString());
+                alert.setHeaderText(task.getTaskInfo());
                 alert.showAndWait();
             }
         }

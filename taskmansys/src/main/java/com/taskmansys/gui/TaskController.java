@@ -9,6 +9,8 @@ import com.taskmansys.model.Task;
 import com.taskmansys.model.TaskList;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -67,7 +69,17 @@ public class TaskController {
         statusSelector.getItems().addAll(statusVars);
 
         // Set the saveButton and cancelButton actions
-        saveButton.setOnAction(event -> saveTask());
+        saveButton.setOnAction(event -> {
+            if (taskNameTF.getText() == null || taskDescrTF.getText() == null || categSelector.getValue() == null || prioSelector.getValue() == null || datePicker.getValue() == null) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Task not created");
+                alert.setHeaderText("You must fill in all fields!");
+                alert.showAndWait();
+            }
+            else {
+                saveTask();
+            }
+        });
         cancelButton.setOnAction(event -> cancelTask());
     }
 
@@ -112,6 +124,9 @@ public class TaskController {
 
         if (creationMode) {
             final Task createdTask = new Task(taskNameTF.getText(), taskDescrTF.getText(), selectedCategory, selectedPriority, datePicker.getValue());
+            if (statusSelector.getValue() != null) {
+                createdTask.changeStatus(statusSelector.getValue());
+            }
             TaskList.tasks.add(createdTask);
 
             System.out.println("Task created: \n" + createdTask.getTaskInfo());

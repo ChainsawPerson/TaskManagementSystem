@@ -2,11 +2,14 @@ package com.taskmansys.gui.helpers.buttons;
 
 import com.taskmansys.App;
 import com.taskmansys.gui.Controller;
+import com.taskmansys.gui.EditWindow;
 import com.taskmansys.gui.helpers.TaskBarChartHelper;
 import com.taskmansys.gui.helpers.tables.PriorityTableViewHelper;
 import com.taskmansys.model.Priority;
 
 import javafx.scene.chart.BarChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -30,7 +33,15 @@ public class PrioritiesButton {
         editPriority.setOnAction(eh -> {
             Priority selectedPriority = priorityTableView.getSelectionModel().getSelectedItem();
             if (selectedPriority != null) {
+                if (selectedPriority.getName().equals("Default")) {
+                    Alert alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Default Priority");
+                    alert.setHeaderText("Default Priority can't be renamed!");
+                    alert.showAndWait();
+                    return;
+                }
                 System.out.println("Edit Priority: " + selectedPriority.getName());
+                EditWindow.editExisting(null, selectedPriority, controller);
             }
         });
         deletePriority.setOnAction(eh -> {

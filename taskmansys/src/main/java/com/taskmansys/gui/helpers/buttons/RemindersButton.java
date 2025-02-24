@@ -1,6 +1,7 @@
 package com.taskmansys.gui.helpers.buttons;
 
 import com.taskmansys.gui.Controller;
+import com.taskmansys.gui.EditWindow;
 import com.taskmansys.gui.helpers.tables.ReminderTableViewHelper;
 import com.taskmansys.model.Reminder;
 
@@ -28,6 +29,7 @@ public class RemindersButton {
             Reminder selectedReminder = reminderTableView.getSelectionModel().getSelectedItem();
             if (selectedReminder != null) {
                 System.out.println("Edit Reminder: " + selectedReminder.getReminderDate().toString());
+                EditWindow.createReminderWindow(controller, selectedReminder.getTask(), selectedReminder);
             }
         });
         deleteReminder.setOnAction(eh -> {

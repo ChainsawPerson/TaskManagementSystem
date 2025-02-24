@@ -10,6 +10,8 @@ import com.taskmansys.gui.helpers.tables.TaskTableViewHelper;
 import com.taskmansys.model.Task;
 
 import javafx.scene.chart.BarChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -34,8 +36,15 @@ public class TasksButton {
         addReminder.setOnAction(eh -> {
             Task selectedTask = taskTableView.getSelectionModel().getSelectedItem();
             if (selectedTask != null) {
+                if (selectedTask.getStatus().equals("Completed")) {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Task Completed");
+                alert.setHeaderText("Task is already completed");
+                alert.showAndWait();
+                return;
+            }
                 System.out.println("Add Reminder to Task: " + selectedTask.getName());
-                EditWindow.createReminderWindow(controller, selectedTask);
+                EditWindow.createReminderWindow(controller, selectedTask, null);
             }
         });
         editTask.setOnAction(eh -> {

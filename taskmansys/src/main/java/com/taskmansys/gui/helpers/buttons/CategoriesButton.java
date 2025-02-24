@@ -2,6 +2,7 @@ package com.taskmansys.gui.helpers.buttons;
 
 import com.taskmansys.App;
 import com.taskmansys.gui.Controller;
+import com.taskmansys.gui.EditWindow;
 import com.taskmansys.gui.helpers.TaskBarChartHelper;
 import com.taskmansys.gui.helpers.tables.CategoryTableViewHelper;
 import com.taskmansys.model.Category;
@@ -31,6 +32,7 @@ public class CategoriesButton {
             Category selectedCategory = categoryTableView.getSelectionModel().getSelectedItem();
             if (selectedCategory != null) {
                 System.out.println("Edit category: " + selectedCategory.getName());
+                EditWindow.editExisting(selectedCategory, null, controller);
             }
         });
         deleteCategory.setOnAction(eh -> {
