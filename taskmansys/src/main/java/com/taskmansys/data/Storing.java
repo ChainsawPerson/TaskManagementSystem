@@ -20,6 +20,7 @@ import com.taskmansys.model.Task;
 import com.taskmansys.model.TaskList;
 
 public class Storing {
+
     private static final String TASKS_JSON = System.getProperty("user.dir") + File.separator + "medialab" + File.separator + "tasks.json";
 
     // Store Data as JSON
@@ -49,20 +50,20 @@ public class Storing {
             taskObj.put("reminders", remindersArray);
 
             tasksArray.put(taskObj);
-            
+
         }
 
         // Write JSON file
         try (FileWriter file = new FileWriter(TASKS_JSON, false)) {
             file.write(tasksArray.toString());
         }
-        
+
     }
 
     // Load Data
     public static void loadData(ArrayList<Priority> prios, ArrayList<Category> categs) throws Exception {
-         // If the file exists in the current working directory (outside JAR)
-         if (!Files.exists(Paths.get(TASKS_JSON))) {
+        // If the file exists in the current working directory (outside JAR)
+        if (!Files.exists(Paths.get(TASKS_JSON))) {
             System.out.println("File not found, starting with an empty task list.");
             return;
         }
@@ -74,7 +75,7 @@ public class Storing {
 
         for (Object taskObj : ar) {
             JSONObject jo = (JSONObject) taskObj;
-            
+
             // Extract task properties
             String name = (String) jo.get("name");
             String description = (String) jo.get("description");
@@ -87,23 +88,23 @@ public class Storing {
 
             // Find or create Category
             Category category = categs.stream()
-                .filter(c -> c.getName().equals(categoryName))
-                .findFirst()
-                .orElseGet(() -> {
-                    Category newCategory = new Category(categoryName);
-                    categs.add(newCategory);
-                    return newCategory;
-                });
+                    .filter(c -> c.getName().equals(categoryName))
+                    .findFirst()
+                    .orElseGet(() -> {
+                        Category newCategory = new Category(categoryName);
+                        categs.add(newCategory);
+                        return newCategory;
+                    });
 
             // Find or create Priority
             Priority priority = prios.stream()
-                .filter(p -> p.getName().equals(priorityName))
-                .findFirst()
-                .orElseGet(() -> {
-                    Priority newPriority = new Priority(priorityName);
-                    prios.add(newPriority);
-                    return newPriority;
-                });
+                    .filter(p -> p.getName().equals(priorityName))
+                    .findFirst()
+                    .orElseGet(() -> {
+                        Priority newPriority = new Priority(priorityName);
+                        prios.add(newPriority);
+                        return newPriority;
+                    });
 
             // Create Task and set status
             Task task = new Task(name, description, category, priority, deadline);
@@ -113,9 +114,10 @@ public class Storing {
             for (Object remObj : remindersArray) {
                 JSONObject reminderJson = (JSONObject) remObj;
                 LocalDate reminderDate = LocalDate.parse((String) reminderJson.get("reminderDate"));
-
-                Reminder reminder = new Reminder(task, reminderDate);
-                task.addReminder(reminder);
+                if (!reminderDate.isBefore(LocalDate.now())) {
+                    Reminder reminder = new Reminder(task, reminderDate);
+                    task.addReminder(reminder);
+                }
             }
 
             task.changeStatus(status); // Add this after reminders are added to make sure to clear them if status is "Completed"
@@ -123,6 +125,6 @@ public class Storing {
             // Add task to list
             TaskList.tasks.add(task);
         }
-        
+
     }
 }
